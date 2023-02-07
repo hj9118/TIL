@@ -3,4 +3,4 @@
 
 ---
 ## Book
-- [모던 자바스크립트 Deep Dive](https://github.com/hj9118/TIL/tree/main/Book/%EB%AA%A8%EB%8D%98_%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8_DeepDive)
+- [모던 자바스크립트 Deep Dive](https://github.com/hj9118/TIL/blob/main/Book/%EB%AA%A8%EB%8D%98_%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8_DeepDive/%EB%AA%A9%EC%B0%A8.md)
