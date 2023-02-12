@@ -17,7 +17,7 @@
 |   as   | 컬럼에 별명을 붙여 직관적이고 짧게 불러올 수 있음 |
 |  NULL  | NULL 값을 사용하기 위해 붙일 수 있다.             |
 
-[일반 연산자]()
+[일반 연산자](https://github.com/hj9118/TIL/blob/main/DB/SQL/SQL.md#where)
 
 ## WHERE문 용
 
@@ -32,8 +32,8 @@
 
 </details>
 
-[논리 연산자]()
-[일반 연산자]()
+[논리 연산자](https://github.com/hj9118/TIL/blob/main/DB/SQL/SQL.md#%EC%97%AC%EB%9F%AC%EA%B0%9C%EC%9D%98-%EC%A1%B0%EA%B1%B4%EC%9D%84-%EB%B6%99%EC%9D%BC-%EB%95%8C) </br>
+[그외 연산자](https://github.com/hj9118/TIL/blob/main/DB/SQL/SQL.md#%EC%9D%B4%EC%99%B8%EC%9D%98-%EC%97%B0%EC%82%B0%EC%9E%90)
 
 ## SELECT
 
@@ -70,7 +70,7 @@ SELECT A_1 FROM A;
 |  <=>   | A<=>B | A와 B가 동일 (null 대응) |
 |   !=   | A!=B  | A와 B는 다름             |
 |   <>   | A<>B  | A와 B는 다름             |
-|   <    | A<B   | A는 B보다 작음           |
+|   <    | A<\B   | A는 B보다 작음           |
 |   >    | A>B   | A는 B보다 큼             |
 |   <=   | A<=B  | A는 B 이하               |
 |   >=   | A>=B  | A는 B 이상               |
