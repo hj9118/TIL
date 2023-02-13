@@ -400,9 +400,52 @@ SELECT DISTINCT name, price FROM A
 | MIN    | 컬럼명         | 컬럼의 최소값. </br>문자열은 사전순 최소 값, 날짜는 오래된 값 |
 | AVG    | 컬럼명         | 컬럼의 평균 값                                                |
 
-__특징__
+**특징**
+
 1. 집약함수는 SELECT, HAVING, ORDER BY 3곳에서 사용 가능하다.
 2. 1개의 함수에서는 1개 값을 반환하며 함수와 컬럼 값을 동시에 출력하지 못한다.
 3. 집약 함수와 함께 적을 수 있는 것은 상수, 집약 함수, DISTINCT, 연산자가 있다.
-4. 컬럼 내 NULL이 있다면 NULL값을 무시하고 집계한다. (단, COUNT(*) 제외)
+4. 컬럼 내 NULL이 있다면 NULL값을 무시하고 집계한다. (단, COUNT(\*) 제외)
 
+## GROUP BY
+
+GROUP BY를 통해 레코드를 그룹마다 통합하여 사용할 수 있다.
+
+| name | price |
+| ---- | ----- |
+| 과일 | 150   |
+| 과일 | 100   |
+| 과자 | 120   |
+| 과자 | 120   |
+
+```sql
+SELECT name, SUM(price) FROM A
+GROUP BY name;
+```
+
+| name | price |
+| ---- | ----- |
+| 과일 | 250   |
+| 과자 | 240   |
+
+- GROUP BY 이후 나온 값을 기준으로 그룹화 진행 (집약 키)
+- NULL도 하나의 그룹으로 처리된다. ➡ NULL은 삭제하고 진행할 것
+- 그룹화 시행시 SELECT 구에는 상수, 집약 함수, 집약 키의 컬럼명 3가지만 지정할 수 있다.
+
+### 집약키 여러개 사용하기
+
+```sql
+SELECT name, price, count(*) FROM A
+GROUP BY name, price;
+```
+
+| name | price | count(\*) |
+| ---- | ----- | :-------: |
+| 과일 | 100   |     1     |
+| 과일 | 150   |     1     |
+| 과자 | 120   |     2     |
+
+- 지정한 집약키 중 먼저 적은 키부터 그룹화를 진행
+
+WHERE절과 GROUP BY절이 함께 있을 경우, </br>
+WHERE절로 레코드를 줄인 뒤 GROUP BY절로 그룹화를 진행한다.
