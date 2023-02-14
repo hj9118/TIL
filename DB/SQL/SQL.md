@@ -731,6 +731,7 @@ LIMIT 2, 1;
 > 일부 데이터베이스에서는 사용할 수 없다.
 
 ## 조건문
+
 - WHERE, ORDER BY절에서 사용 가능
 - ORDER BY에서 조건 분류 실행시 정렬순으로 설정 가능
 - WHERE에서 조건 분류 사용시 조건에 따라 비교하는 컬럼을 변경할 수 있다.
@@ -883,3 +884,128 @@ FROM A;
 |  A   |  3   | 주의 |
 |  B   |  7   | 여유 |
 |  C   |  12  | 충분 |
+
+## 값 변환
+
+### NULL 대응법
+
+NULL 연산시 결과가 NULL이 되고 </br>
+NULL 정렬시 맨 앞 혹은 맨 뒤에 위치하게 된다. </br>
+</br>
+
+CASE, IF문으로 변경할 수도 있으나 `COALESCE` 함수로 간단히 사용할 수 있게 된다.
+
+```sql
+COALESCE (인수1, 인수2 ..., 인수n)
+COALESCE (1) /* 1 */
+COALESCE (NULL, NULL, 2, NULL) /* 2 */
+COALESCE (NULL, NULL, NULL) /* NULL */
+```
+
+NULL을 0으로 변경하기 위해서는
+
+```sql
+COALESCE(컬럼, 0);
+```
+
+컬럼이 NULL이면 0을 NULL이 아니면 컬럼 값을 반환한다. </br>
+
+- 예시: 평균값 구하기
+
+  | 평점 |
+  | :--: |
+  |  5   |
+  |  3   |
+  |  2   |
+  | NULL |
+
+```sql
+SELECT AVG(COALESCE(평점, 0))
+FROM A;
+```
+
+기존에는 NULL을 무시하여 (5+3+2)/3 으로 진행. 3.333...를 반환 </br>
+NULL을 0으로 변경하게 되면 (5+3+2+0)/4로 진행. 2.5를 반환
+
+### IFNULL
+
+IFNULL은 COALESCE와 달리 인수를 2개만 받는다.
+
+```sql
+IFNULL(컬럼, 0)
+```
+
+```sql
+SELECT * FROM A;
+ORDER BY IFNULL(price, 99999);
+```
+
+일 경우 가격이 NULL이라면 99999로 변경. 값이 안보이게 처리한다.
+
+> **수치의 최대 값?** </br>
+> 일반적으로 0 혹은 9999 처럼 임의의 큰 수를 작성하기도 하지만, </br>
+> 데이터 형의 최대값을 지정할 수도 있다.
+
+### NULLIF
+
+컬럼 값이 2번째 인수와 같다면 NULL을 반환
+
+```sql
+NULLIF(컬럼, 비교 값)
+```
+
+컬럼 = 비교값 ➡ NULL 반환 </br>
+컬럼 ≠ 비교값 ➡ 컬럼값 반환
+
+## 데이터 형식 변경
+
+데이터는 정해진 데이터형에 맞춰 저장되어 있다. </br>
+문자열과 숫자는 계산할 수 없으나 실제로는 계산하여 자동으로 데이터형 변환이 이뤄진다.
+
+> 데이터형을 변경하는 것을 `캐스트`이라고 한다.
+
+### CAST
+
+CAST 함수를 통해 데이터 형을 명시적으로 변경할 수 있다.
+
+```sql
+CAST(데이터 AS 데이터형)
+CAST('123' AS SIGNED); /* 부호 포함 정수로 변경 */
+```
+
+- 변환 가능 데이터형
+  |형|사용법|의미|
+  |:-:|-|-|
+  |BINARY|BINARY, BINARY(n)|바이너리, n비트 바이너리|
+  |CHAR|CHAR, CHAR(a)|문자, a문자|
+  |DATE|DATE|날짜|
+  |DATETIME|DATETIME|일시|
+  |TIME|TIME|시간|
+  |DECIMAL|DECIMAL</br>DECIMAL(a)</br>DECIMAL(a, b)</br>|소수</br>a자릿수 소수</br>a자릿수 소수부, b자릿수 소수|
+  |SIGNED|SIGNED, SIGNED INTEGER|부호있는 정수|
+  |UNSIGNED|UNSIGNED, UNSIGNED INTEGER|부호없는 정수|
+
+- 문자를 숫자로 변경하여 정렬하는 법
+
+| id  | num |
+| :-: | :-: |
+|  3  |  1  |
+|  1  | 20  |
+|  2  |  4  |
+|  4  |  7  |
+
+val 기준으로 정렬시 문자열 기준으로 사전순으로는 20이 먼저 오기 때문에 숫자형으로 변경해야 한다.
+
+```sql
+SELECT * FROM A
+ORDER BY CAST(num AS SIGNED);
+```
+
+| id  | num |
+| :-: | :-: |
+|  3  |  1  |
+|  2  |  4  |
+|  4  |  7  |
+|  1  | 20  |
+
+캐스트하여 데이터 형을 문자에서 숫자로 변경하면 위와 같은 결과를 얻을 수 있는 것.
