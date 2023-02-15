@@ -142,7 +142,7 @@ FROM (
 
 ## 상관 서브 쿼리
 서브 쿼리지만 메인 쿼리와 연계하여 함께 실행한다.
-예시
+예시 - 기본 사용 법
 ```sql
 SELECT a.id, a.name FROM A
 WHERE 3 < (
@@ -154,4 +154,40 @@ WHERE 3 < (
 
 ---
 
-메인 쿼리와 서브 쿼리에서 테이블이 나오며 테이블의 주인을 찾기 위해 `테이블.컬럼` 형식으로 점으로 연결하여 작성한다.
+메인 쿼리와 서브 쿼리에서 테이블이 나오며 테이블의 주인을 찾기 위해 `테이블.컬럼` 형식으로 점으로 연결하여 작성한다. </br>
+</br>
+예시
+
+```sql
+SELECT 컬럼, (
+  SELECT ~ FROM 테이블2 AS B
+  WHERE A.컬럼C = B.컬럼C
+) FROM 테이블1 AS A
+```
+
+예시2 - 고객별 구입액 구하기
+```sql
+SELECT a.id, a.name, (
+  SELECT SUM(b.price) FROM product AS b
+  WHERE a.id = b.id
+) AS res
+FROM customer AS a;
+```
+
+- customer 테이블을 a, product 테이블을 b로 별명 지정
+- id값이 동일하여 같은 인물의 구매내역임을 파악하여 각 id별 구매액 합계를 계산
+- id, name, sum_price 값을 계산한다.
+
+### EXISTS
+상관 서브 쿼리 결과에 사용하여, 서브 쿼리의 결과가 존재하면 1을 반환.
+
+```sql
+SELECT a.col1, a.col2 FROM table1 AS a
+WHERE EXISTS (
+  SELECT * FROM table2 AS b
+  WHERE a.col1 = b.col2
+);
+```
+- 값이 있다면 true를 반환하여 레코드를 가져온다.
+- 값이 없다면 false를 반환하여 레코드를 가져오지 않는다.
+
