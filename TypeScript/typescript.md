@@ -160,43 +160,115 @@ a + b; // ok. "1,2,3,4true"
 let a: unknow;
 let b = a + 1; // error. Object is of type 'unknown'
 
-if (typeof a === 'number'){
+if (typeof a === 'number') {
   let b = a + 1;
 }
 
-if (typeof a === 'string'){
+if (typeof a === 'string') {
   let b = a.toUpperCase();
 }
 ```
+
 타입 확인 이후 형식에 맞는 결과를 진행
 
 - void (return 하지 않는 함수를 대상으로 사용)
+
 ```ts
 function hello() {
-  console.log('x')
+  console.log('x');
 }
 ```
+
 return할 것이 없다면 자동으로 void 타입임을 인지한다.
 
 - never (절대 return하지 않을 때 발생) </br>
-case1: 예외 실행
+  case1: 예외 실행
+
 ```ts
-function hello():never{
-  //return "X" 
+function hello(): never {
+  //return "X"
   // error. Type 'string' is not assignable to type 'never'.
-  
-  throw new Error("xxx") // ok. return 없이 오류 발생
+
+  throw new Error('xxx'); // ok. return 없이 오류 발생
 }
 ```
- case2: 인자에 대한 타입 변경
+
+case2: 인자에 대한 타입 변경
+
 ```ts
-function hello(name: string|number){
-  if(typeof name === 'string'){
-    name // name: string
-  } else if (typeof name === 'number'){
-    name // name: number
+function hello(name: string | number) {
+  if (typeof name === 'string') {
+    name; // name: string
+  } else if (typeof name === 'number') {
+    name; // name: number
   } else {
-    name // name: never. 이 영역은 절대 실행되서는 안됨
+    name; // name: never. 이 영역은 절대 실행되서는 안됨
   }
 }
-````
+```
+
+## 함수
+
+```ts
+function add(a: number, b: number) {
+  return a + b;
+}
+
+const add = (a: number, b: number) => a + b;
+```
+
+기본적인 함수 만들기 방식</br>
+
+함수에 타입을 미리 지정하여 함수 시그니처 생성시
+
+```ts
+type Add = (a: number, b: number) => number;
+const add: Add = (a, b) => a + b;
+
+const add: Add = (a, b) => {
+  a + b;
+}; // 이것은 void 반환으로 에러처리
+```
+
+로 작성해도 에러가 발생하지 않는다.</br>
+함수의 타입을 통해 파라미터의 타입을 이미 알고 있기 때문.
+
+### 오버 로딩
+
+case1 - 리턴이 다를 수 있을 때
+
+```ts
+type Config = {
+  path: string;
+  state: object;
+};
+
+type Push = {
+  (path: string): void;
+  (config: Config): void;
+};
+
+const push: Push = (config) => {
+  // 타입 체크로 타입별 반환값을 지정할 수 있다.
+  if (typeof config === 'string') {
+    console.log(config);
+  } else {
+    console.log(config.path, config.state);
+  }
+};
+```
+
+case2 - 인자개수가 다를 수 있을 때
+
+```ts
+type Add = {
+  (a: number, b: number): number;
+  (a: number, b: number, c: number): number;
+};
+
+const add: Add = (a, b, c?: number) => {
+  if (c) return a + b + c;
+  return a + b;
+};
+```
+### 다형성
