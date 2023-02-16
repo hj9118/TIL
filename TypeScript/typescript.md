@@ -271,4 +271,105 @@ const add: Add = (a, b, c?: number) => {
   return a + b;
 };
 ```
+
 ### 다형성
+
+```ts
+type SuperArr = {
+  (arr: number[]): void;
+  (arr: boolean[]): void;
+};
+
+const superArr: SuperArr = (arr) => {
+  arr.forEach((i) => console.log(i));
+};
+
+superArr([1, 2, 3]);
+superArr([true, false, true]);
+superArr(['a', 'b', 'c']); // error.
+// No overload matches this call.
+// Overload 1 of 2, '(arr: number[]): void', gave the following error.
+// Type 'string' is not assignable to type 'number'.
+```
+
+해결법
+
+1. type SuperArr에서 (arr: string[]): void 추가
+2. type SuperArr에서 (arr: (number|boolean|string)[]): void 작성
+
+➡ 모두 각 케이스별 작성이 필요할 것
+
+```ts
+type SuperArr = {
+  <T>(arr: T[]): void;
+};
+
+const superArr: SuperArr = (arr) => {
+  arr.forEach((i) => console.log(i));
+};
+
+superArr([1, 2, 3]); // type - number
+superArr([true, false, true]); // type - boolean
+superArr([1, '2', '3']); // type - number | string
+```
+
+이로 인해 인자, 반환 값은 타입을 자동으로 유추할 수 있다.</br>
+해당 값은 T가 아닌 다른 값, 라이브러리 이름도 올 수 있다.
+
+| any                          | poly                                 |
+| ---------------------------- | ------------------------------------ |
+| type: any                    | type: 각 값에 맞게 자동 인식         |
+| 타입과 맞지 않는 코드도 실행 | 타입을 유추하여 맞지 않으면 에러처리 |
+
+---
+
+제너릭은 여러개 작성이 가능하며 첫 인식 값과 순서를 기반으로 파악한다.
+
+```ts
+type SuperArr = <T, M>(a: T[], b: M) => T; // 두 인자를 받으며 첫 인자는 배열임을 인지
+
+const superArr: SuperArr = (a) => a[0];
+
+superArr([1, 2, 3], 'x'); // <number, string>(a: number[], b: string) => number
+superArr([true, false, true], 1); // <boolean, number>(a: boolean[], b: number) => boolean
+```
+
+---
+
+사용 예시
+
+```ts
+// 1. 함수 작성시
+function example1<T>(a: T[]) {
+  return a[0];
+}
+
+// 2. 중첩 사용
+type Player<Extra> = {
+  name: string;
+  extraInfo: Extra;
+};
+
+type ANumber = { favNumber: number };
+type PlayerInfo = Player<ANumber>;
+
+const playerA: PlayerInfo = {
+  name: 'playerA',
+  extraInfo: {
+    favNumber: 7,
+  },
+};
+
+const playerB: Player<null> = {
+  name: 'playerB',
+  extraInfo: null,
+};
+
+// 3. 제너릭을 받는 값 명시적 활용
+type A = Array<number>
+
+let a:A = [1, 2, 3, 4]
+
+// 4. in React
+useState<number>() // useState는 숫자만 들어올 수 있게 됨.
+```
