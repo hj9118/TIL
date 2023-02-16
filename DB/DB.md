@@ -36,3 +36,13 @@ BOOLEAN으로 알려지며 1 또는 0의 값을 갖는다. </br>
 |기본키|테이블 내 같은 값을 갖지 않는 유일한 컬럼|
 |보조키|대체키 라고도 부르며 기본키를 포함한 기본키가 될 수 있는 조건의 키들을 의미|
 |외래키|현재 테이블 내에서 갖는 다른 테이블의 컬럼|
+
+## JOIN
+- JOIN 종류
+
+|종류|예시|의미|
+|:-:|-|-|
+|INNER JOIN|a INNER JOIN b </br> a JOIN b|`테이블a`과 `테이블b`를 내부 결합|
+|LEFT OUTER JOIN </br> LEFT JOIN|a LEFT OUTER JOIN b </br> a LEFT JOIN b|`테이블a`에 `테이블b`를 외부 결합 (왼쪽 테이블 우선)|
+|RIGHT OUTER JOIN </br> RIGHT JOIN|a RIGHT OUTER JOIN b </br> a RIGHT JOIN b|`테이블b`에 `테이블a`를 외부 결합 (오른쪽 테이블 우선)|
+|CROSS JOIN|a CROSS JOIN b|`테이블a`와 `테이블b`의 모든 레코드를 조합|

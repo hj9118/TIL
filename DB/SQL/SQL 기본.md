@@ -51,15 +51,19 @@
 
 | 작성순   | 실행 순서 |
 | -------- | :-------: |
-| SELECT   |     5     |
-| DISTNCT  |     6     |
+| SELECT   |     7     |
+| DISTNCT  |     8     |
 | FROM     |     1     |
-| WHERE    |     2     |
-| GROUP BY |     3     |
-| HAVING   |     4     |
-| ORDER BY |     7     |
-| LIMIT    |     9     |
-| OFFSET   |     8     |
+| JOIN     |     3     |
+| ON       |     2     |
+| WHERE    |     4     |
+| GROUP BY |     5     |
+| HAVING   |     6     |
+| ORDER BY |     9     |
+| LIMIT    |    11     |
+| OFFSET   |    10     |
+
+\* 단 서브 쿼리가 있다면 서브쿼리의 FROM - WHERE - SELECT 순으로 먼저 실행한 뒤 메인 쿼리로 이동
 
 ## SELECT
 
